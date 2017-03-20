@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-    echo json_encode($err->put(), JSON_PRETTY_PRINT);
+    require 'update.php';
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
