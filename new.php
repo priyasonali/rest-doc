@@ -9,13 +9,20 @@ class AddSection{
         $mysqli = $db->connect();
         $pkey = md5(uniqid($this->email, true));
         if($this->project != null && $this->email != null){
-            if($result = $mysqli->query("INSERT INTO project (pname, emailid, pkey) VALUES ('$this->project','$this->email', '$pkey')"))
+            $result = $mysqli->query("SELECT * FROM project WHERE pname = '$this->project'");
+            if(mysqli_num_rows($result)>0){
+                http_response_code(400);
+                $response["status"] = "failure";
+                $response["reason"] = "Project name already exists.";
+
+            } else if($result = $mysqli->query("INSERT INTO project (pname, emailid, pkey) VALUES ('$this->project','$this->email', '$pkey')"))
             {
                 $response["status"] = "success"; 
                 $response["key"] = $pkey;
                 $response["note"] = 'Use the key for future query.';
             }
         }else{
+             http_response_code(400);
             $response["status"] = "failure";
             $response["reason"] = "Parameters can't be empty.";
         }

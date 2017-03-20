@@ -9,11 +9,20 @@ class DeleteProject{
         $db = new Database;
         $mysqli = $db->connect();
         if($this->project != null && $this->key != null){
-            if($mysqli->query("DELETE FROM project WHERE pkey='$this->key'"))
-            {
-                $response["status"] = "success"; 
-            }
+            $result = $mysqli->query("SELECT * FROM project WHERE pkey = '$this->key'");
+            
+            if(mysqli_num_rows($result)>0){
+                if($mysqli->query("DELETE FROM project WHERE pkey='$this->key'"))
+                {
+                    $response["status"] = "success"; 
+                }
+            }else{
+             http_response_code(400);
+            $response["status"] = "failure";
+            $response["reason"] = "No such project exists.";
+         }
         }else{
+             http_response_code(400);
             $response["status"] = "failure";
             $response["reason"] = "Parameters can't be empty.";
         }
