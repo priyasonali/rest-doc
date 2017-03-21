@@ -14,15 +14,19 @@ class Project{
         $pkey = md5(uniqid($this->email, true));
         $mysqli = $this->mysqli;
         if($this->project != null && $this->email != null){
-            $result = $mysqli->query("SELECT * FROM project WHERE pname = '$this->project'");
-            if(mysqli_num_rows($result)>0){
-                $response =  error\Errorlist::exists();
+            if(filter_var($this->email, FILTER_VALIDATE_EMAIL)){
+                $result = $mysqli->query("SELECT * FROM project WHERE pname = '$this->project'");
+                if(mysqli_num_rows($result)>0){
+                    $response =  error\Errorlist::exists();
 
-            } else if($result = $mysqli->query("INSERT INTO project (pname, emailid, pkey) VALUES ('$this->project','$this->email', '$pkey')"))
-            {
-                $response["status"] = "success"; 
-                $response["key"] = $pkey;
-                $response["note"] = 'Use the key for future query.';
+                } else if($result = $mysqli->query("INSERT INTO project (pname, emailid, pkey) VALUES ('$this->project','$this->email', '$pkey')"))
+                {
+                    $response["status"] = "success"; 
+                    $response["key"] = $pkey;
+                    $response["note"] = 'Use the key for future query.';
+                }
+            }else{
+            $response = error\ErrorList::invalidEmail();
             }
         }else{
             $response = error\ErrorList::empty();

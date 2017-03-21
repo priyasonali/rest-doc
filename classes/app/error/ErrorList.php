@@ -39,4 +39,9 @@ class ErrorList {
             $response["reason"] = "Project does not exists.";
             return $response;
       }
+      public function invalidEmail(){
+            $response["status"] = "failure";
+            $response["reason"] = "Not a valid email.";
+            return $response;
+      }
 }
